@@ -6,7 +6,7 @@ import zipfile
 import io
 import os
 
-# Shirt color templates (placeholder - replace with real paths or uploads)
+# Shirt color templates
 shirt_templates = {
     "WHITE": "assets/WHITE.jpg",
     "BLACK": "assets/BLACK.jpg",
@@ -18,15 +18,19 @@ shirt_templates = {
     "YELLOW": "assets/YELLOW.jpg"
 }
 
-# Placement box
-box_x0, box_y0, box_x1, box_y1 = 733, 636, 1355, 1022
+# Load transparent placement guide to calculate dynamic box
+placement_guide = Image.open("assets/PLACEMENT_GUIDE.png").convert("L")
+mask_array = np.array(placement_guide)
+transparent = mask_array == 0
+ys, xs = np.where(transparent)
+box_x0, box_y0, box_x1, box_y1 = xs.min(), ys.min(), xs.max(), ys.max()
 
 # Recolor logic
 light_colors = ["WHITE", "PINK", "YELLOW"]
 dark_colors = ["BLACK", "NAVY BLUE", "MAROON", "GREEN", "BABY BLUE"]
 
 st.title("👕 LynchMockup_Tool_v1")
-st.write("Upload one or more transparent PNG designs. Get mockups across all shirt colors with proper placement and color switching.")
+st.write("Upload one or more transparent PNG designs. They will be auto-placed and recolored onto all t-shirt colors using the PNG placement guide.")
 
 uploaded_files = st.file_uploader("Upload PNG files", type=["png"], accept_multiple_files=True)
 
