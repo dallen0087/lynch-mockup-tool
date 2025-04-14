@@ -18,11 +18,11 @@ shirt_templates = {
     "YELLOW": "assets/YELLOW.jpg"
 }
 
-# Load transparent placement guide to calculate dynamic box
-placement_guide = Image.open("assets/PLACEMENT_GUIDE.png").convert("L")
-mask_array = np.array(placement_guide)
-transparent = mask_array == 0
-ys, xs = np.where(transparent)
+# Use alpha channel from transparent guide to detect placement box
+placement_guide = Image.open("assets/PLACEMENT_GUIDE.png").convert("RGBA")
+alpha = np.array(placement_guide.split()[-1])
+mask = alpha < 10  # threshold: nearly transparent
+ys, xs = np.where(mask)
 box_x0, box_y0, box_x1, box_y1 = xs.min(), ys.min(), xs.max(), ys.max()
 
 # Recolor logic
