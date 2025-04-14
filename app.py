@@ -27,7 +27,7 @@ box_x0, box_y0, box_x1, box_y1 = xs.min(), ys.min(), xs.max(), ys.max()
 
 # Recolor logic
 light_colors = ["WHITE", "PINK", "YELLOW"]
-dark_colors = ["BLACK", "NAVY BLUE", "MAROON", "GREEN", "BABY BLUE"]
+dark_colors = ["BLACK", "NAVY BLUE", "MAROON", "GREEN", "BABY_BLUE"]
 
 st.title("👕 LynchMockup_Tool_v1")
 st.write("Upload one or more transparent PNG designs. They will be auto-placed and recolored onto all t-shirt colors using the PNG placement guide.")
@@ -62,8 +62,9 @@ if uploaded_files:
                 fill.putalpha(resized_alpha)
 
                 mock = base.copy()
-                px = box_x0 + (box_w - new_w) // 2
-                py = box_y0 + (box_h - new_h) // 2
+                # Anchor to top-left of placement box
+                px = box_x0
+                py = box_y0
                 mock.paste(fill, (px, py), fill)
 
                 filename = f"{uploaded.name.split('.')[0]}_{color.replace(' ', '_')}.jpg"
